@@ -5,6 +5,69 @@ using std::cout;
 //using std::cin;
 std::ifstream cin("input.txt");
 
+class Matrix {
+private:
+    int** mat;
+    int m, n;
+public:
+    Matrix(int m1, int n1) {
+        m = m1;
+        n = n1;
+        mat = new int* [m];
+        for (int i = 0; i < m; i++) {
+            mat[i] = new int[n];
+        }
+    }
+
+    Matrix(int m1, int n1, std::ifstream &cin) {
+        m = m1; 
+        n = n1;
+        mat = new int* [m];
+        for (int i = 0; i < m; i++) {
+            mat[i] = new int[n];
+            for (int j = 0; j < n; j++) {
+                cin >> mat[i][j];
+            }
+        }
+    }
+    int getM() {
+        return m;
+    }
+    int getN() {
+        return n;
+    }
+    void show() {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                cout << mat[i][j] << ' ';
+            }
+            cout << '\n';
+        }
+        cout << '\n';
+    }
+
+    Matrix& add(Matrix &b) {
+        int m = b.getM();
+        int n = b.getN();
+        //if (m != this->getM() || n != this->getN()) {
+        //    std::cout << "Error!\n";
+        //    return Matrix(m,n);
+        //}
+        Matrix c(m, n);
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                c.mat[i][j] = this->mat[i][j] + b.mat[i][j];
+            }
+        }
+        return c;
+    }
+
+    Matrix& operator+ (Matrix& b) {
+        return add(b);
+    }
+};
+
+
 void show(int** a, int m, int n) {
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
@@ -82,29 +145,38 @@ int main()
     setlocale(LC_ALL, "Russian");
     int n, m;
     cin >> m >> n;
-    int** a = nullptr;
-    a = input(a, m, n);
-    show(a, m, n);
+    Matrix a(m, n, cin);
+    Matrix b(m, n, cin);
+    a.show();
+    b.show();
+    Matrix c = a.add(b);
+    c.show();
 
-    int** b = nullptr;
-    b = input(b, m, n);
-    show(b, m, n);
+    Matrix d = a + b + c;
+    d.show();
+    //int** a = nullptr;
+    //a = input(a, m, n);
+    //show(a, m, n);
 
-    cout << "Сумма а+b:\n";
-    int** c = add(a, b, m, n);
-    show(c, m, n);
+    //int** b = nullptr;
+    //b = input(b, m, n);
+    //show(b, m, n);
 
-    cout << "10a:\n";
-    c = mult(a, 10, m, n);
-    show(c, m, n);
+    //cout << "Сумма а+b:\n";
+    //int** c = add(a, b, m, n);
+    //show(c, m, n);
 
-    cout << "произведение a*b:\n";
-    c = mult(a, b, m, n);
-    show(c, m, n);
+    //cout << "10a:\n";
+    //c = mult(a, 10, m, n);
+    //show(c, m, n);
 
-    cout << "Степень a^5:\n";
-    c = pow(a, 5, m, n);
-    show(c, m, n);
+    //cout << "произведение a*b:\n";
+    //c = mult(a, b, m, n);
+    //show(c, m, n);
+
+    //cout << "Степень a^5:\n";
+    //c = pow(a, 5, m, n);
+    //show(c, m, n);
 
     return 0;
 }
